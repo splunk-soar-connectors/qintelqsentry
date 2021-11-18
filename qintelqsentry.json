@@ -1,0 +1,150 @@
+{
+    "appid": "a9561e88-1764-42bd-a4d5-8bb2e728e54c",
+    "name": "Qintel QSentry",
+    "description": "This app retrieves ip reputation and anonymization data from Qintel’s QSentry platform",
+    "type": "reputation",
+    "product_vendor": "Qintel",
+    "logo": "qintelqsentry.png",
+    "logo_dark": "qintelqsentry_dark.png",
+    "product_name": "Qintel QSentry",
+    "product_version_regex": ".*",
+    "publisher": "Qintel, LLC",
+    "license": "Apache 2.0",
+    "app_version": "1.0.0",
+    "utctime_updated": "2021-11-16T14:25:46.922845Z",
+    "package_name": "phantom_qintelqsentry",
+    "main_module": "qintelqsentry_connector.py",
+    "min_phantom_version": "4.6.19142",
+    "app_wizard_version": "1.0.0",
+    "python_version": "3",
+    "configuration": {
+        "token": {
+            "description": "API Token",
+            "data_type": "password",
+            "required": true,
+            "default": "",
+            "order": 1
+        },
+        "remote": {
+            "description": "QSentry API URL (Optional)",
+            "data_type": "string",
+            "required": false,
+            "default": "https://api.qsentry.qintel.com",
+            "order": 2
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "verbose": "",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "ip reputation",
+            "identifier": "ip_reputation",
+            "description": "Queries for IP intelligence data",
+            "verbose": "",
+            "type": "reputation",
+            "read_only": true,
+            "parameters": {
+                "ip": {
+                    "description": "IP to query",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "ip"
+                    ],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0
+                }
+            },
+            "render": {
+                "type": "table",
+                "title": "Threat Info"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ip",
+                    "data_type": "string",
+                    "contains": [
+                        "ip"
+                    ],
+                    "example_values": [
+                        "1.2.3.4"
+                    ]
+                },
+                {
+                    "column_name": "ASN",
+                    "column_order": 1,
+                    "data_path": "action_result.data.*.asn",
+                    "data_type": "string",
+                    "example_values": [
+                        "12345"
+                    ],
+                    "contains": [
+                    ]
+                },
+                {
+                    "column_name": "ASN Name",
+                    "column_order": 2,
+                    "data_path": "action_result.data.*.asn_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Some Service Provider"
+                    ],
+                    "contains": [
+                    ]
+                },
+                {
+                    "column_name": "Last Seen",
+                    "column_order": 3,
+                    "data_path": "action_result.data.*.last_seen",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-11-16T15:05:32.070497"
+                    ],
+                    "contains": [
+                    ]
+                },
+                {
+                    "column_name": "Tags",
+                    "column_order": 4,
+                    "data_path": "action_result.data.*.tags",
+                    "data_type": "string",
+                    "example_values": [
+                        "vpn,botnet"
+                    ],
+                    "contains": [
+                    ]
+                },
+                {
+                    "column_name": "Descriptions",
+                    "column_order": 5,
+                    "data_path": "action_result.data.*.descriptions",
+                    "data_type": "string",
+                    "example_values": [
+                    ],
+                    "contains": [
+                    ]
+                }
+            ],
+            "versions": "EQ(*)"
+        }
+    ]
+}
