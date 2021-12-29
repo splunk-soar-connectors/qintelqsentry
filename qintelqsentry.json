@@ -46,7 +46,7 @@
             "action": "ip reputation",
             "identifier": "ip_reputation",
             "description": "Queries for IP intelligence data",
-            "type": "reputation",
+            "type": "investigate",
             "read_only": true,
             "parameters": {
                 "ip": {
@@ -77,7 +77,7 @@
                 },
                 {
                     "column_name": "ASN",
-                    "column_order": 1,
+                    "column_order": 0,
                     "data_path": "action_result.data.*.asn",
                     "data_type": "string",
                     "example_values": [
@@ -86,7 +86,7 @@
                 },
                 {
                     "column_name": "ASN Name",
-                    "column_order": 2,
+                    "column_order": 1,
                     "data_path": "action_result.data.*.asn_name",
                     "data_type": "string",
                     "example_values": [
@@ -95,13 +95,13 @@
                 },
                 {
                     "column_name": "Descriptions",
-                    "column_order": 5,
+                    "column_order": 4,
                     "data_path": "action_result.data.*.descriptions",
                     "data_type": "string"
                 },
                 {
                     "column_name": "Last Seen",
-                    "column_order": 3,
+                    "column_order": 2,
                     "data_path": "action_result.data.*.last_seen",
                     "data_type": "string",
                     "example_values": [
@@ -110,7 +110,7 @@
                 },
                 {
                     "column_name": "Tags",
-                    "column_order": 4,
+                    "column_order": 3,
                     "data_path": "action_result.data.*.tags",
                     "data_type": "string",
                     "example_values": [

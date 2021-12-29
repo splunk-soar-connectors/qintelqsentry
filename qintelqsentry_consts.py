@@ -15,7 +15,8 @@
 
 # Misc
 VERSION = '1.0.0'
-USER_AGENT = f'Splunk-SOAR-{VERSION}'
+USER_AGENT = 'Splunk-SOAR-'
+USER_AGENT += VERSION
 
 QINTELQSENTRY_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format.\
      Resetting the state file with the default format. Please try again."

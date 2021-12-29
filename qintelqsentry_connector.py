@@ -15,6 +15,7 @@
 
 import json
 import os
+import ipaddress
 from copy import deepcopy
 
 # Phantom App imports
@@ -35,28 +36,32 @@ class QSentryConnector(BaseConnector):
 
         self._state = None
 
-    def _handle_test_connectivity(self):
+    def _is_ip(self, input_ip_address):
+        """
+        Function that checks given address and returns True if address is valid IPv4 or IPV6 address.
+        :param input_ip_address: IP address
+        :return: status (success/failure)
+        """
 
         try:
+            ipaddress.ip_address(input_ip_address)
+        except Exception:
+            return False
+
+        return True
+
+    def _handle_test_connectivity(self):
+
+        action_result = self.add_action_result(ActionResult())
+        try:
             res = search_qsentry('1.1.1.1', **self.client_args)
-            self.debug_print('qsentry test connectivity return: ', res)
+            self.debug_print(f'qsentry test connectivity return: {res}')
         except Exception as e:
-            self.debug_print('qsentry test connectivity error: ', e)
-            self.set_status(phantom.APP_ERROR,
-                            'QSentry Connectivity Test Failed ', e)
-            return self.get_status()
+            self.debug_print(f'qsentry test connectivity error: {str(e)}')
+            return action_result.set_status(phantom.APP_ERROR, f'Test Connectivity Failed {str(e)}')
 
         self.save_progress('Test Connectivity Successful')
-        return self.set_status(phantom.APP_SUCCESS, 'Test Connectivity Successful')
-
-    def _init_handler(self, param, field):
-
-        self.save_progress("In action handler for: {0}"
-                           .format(self.get_action_identifier()))
-
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        return param.get(field), action_result
+        return action_result.set_status(phantom.APP_SUCCESS, 'Test Connectivity Successful')
 
     def _qsentry_query(self, ip, search_args=None):
 
@@ -67,7 +72,7 @@ class QSentryConnector(BaseConnector):
         try:
             return search_qsentry(ip, **kwargs)
         except Exception as e:
-            self.debug_print('qsentry lookup failed: ', e)
+            self.debug_print(f'qsentry lookup failed: {str(e)}')
             raise Exception(str(e))
 
     def _process_qsentry_data(self, response, summary):
@@ -87,13 +92,14 @@ class QSentryConnector(BaseConnector):
 
     def _handle_ip_reputation(self, param):
 
-        ip, action_result = self._init_handler(param, 'ip')
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        ip = param.get('ip')
 
         if not ip:
-            self.debug_print(f'missing ip parameter for '
-                             f'{self.get_action_identifier()}')
-            self.set_status(phantom.APP_ERROR, 'Missing ip address for lookup')
-            return self.get_status()
+            self.debug_print(f'missing ip parameter for {self.get_action_identifier()}')
+            return action_result.set_status(phantom.APP_ERROR, 'Missing ip address for lookup')
 
         summary = {'criminal': False, 'anonymization': False}
 
@@ -103,8 +109,11 @@ class QSentryConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, str(e))
 
         if isinstance(response, dict):
-            rv = self._process_qsentry_data(response, summary)
-            action_result.add_data(rv)
+            try:
+                rv = self._process_qsentry_data(response, summary)
+                action_result.add_data(rv)
+            except Exception as e:
+                action_result.set_status(phantom.APP_ERROR, str(e))
 
         action_result.update_summary(summary)
 
@@ -116,7 +125,7 @@ class QSentryConnector(BaseConnector):
 
         # Get the action that we are supposed to execute for this App Run
         action_id = self.get_action_identifier()
-        self.debug_print("action_id", self.get_action_identifier())
+        self.debug_print(f"action_id {self.get_action_identifier()}")
 
         if action_id == 'test_connectivity':
             ret_val = self._handle_test_connectivity()
@@ -138,6 +147,9 @@ class QSentryConnector(BaseConnector):
                 "app_version": self.get_app_json().get('app_version')
             }
             return self.set_status(phantom.APP_ERROR, QINTELQSENTRY_STATE_FILE_CORRUPT_ERR)
+
+        # Custom validator for IP address
+        self.set_validator("ip", self._is_ip)
 
         config = self.get_config()
         self._proxies = {}
