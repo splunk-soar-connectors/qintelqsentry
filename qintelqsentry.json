@@ -1,7 +1,7 @@
 {
     "appid": "a9561e88-1764-42bd-a4d5-8bb2e728e54c",
     "name": "Qintel QSentry",
-    "description": "This app retrieves ip reputation and anonymization data from Qintel's QSentry platform",
+    "description": "This app retrieves IP reputation and anonymization data from Qintel's QSentry platform",
     "type": "reputation",
     "product_vendor": "Qintel",
     "logo": "logo_qintelqsentry.svg",
@@ -22,13 +22,13 @@
             "description": "API Token",
             "data_type": "password",
             "required": true,
-            "order": 1
+            "order": 0
         },
         "remote": {
             "description": "QSentry API URL (Optional)",
             "data_type": "string",
             "default": "https://api.qsentry.qintel.com",
-            "order": 2
+            "order": 1
         }
     },
     "actions": [
