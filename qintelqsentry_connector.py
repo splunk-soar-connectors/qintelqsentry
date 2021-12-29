@@ -1,8 +1,20 @@
-# -----------------------------------------
-# Phantom App Connector python file
-# -----------------------------------------
+# File: qintelqsentry_connector.py
+#
+# Copyright (c) 2009-2021 Qintel, LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
 
 import json
+import os
 from copy import deepcopy
 
 # Phantom App imports
@@ -10,8 +22,8 @@ import phantom.app as phantom
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
-from qintel_helper import search_qsentry
-from qintelqsentry_consts import USER_AGENT
+from qintelqsentry_helper import search_qsentry
+from qintelqsentry_consts import *
 
 
 class QSentryConnector(BaseConnector):
@@ -34,8 +46,8 @@ class QSentryConnector(BaseConnector):
                             'QSentry Connectivity Test Failed ', e)
             return self.get_status()
 
-        return self.set_status_save_progress(phantom.APP_SUCCESS,
-                                             'Test Connectivity Successful')
+        self.save_progress('Test Connectivity Successful')
+        return self.set_status(phantom.APP_SUCCESS, 'Test Connectivity Successful')
 
     def _init_handler(self, param, field):
 
@@ -120,14 +132,34 @@ class QSentryConnector(BaseConnector):
         # that needs to be accessed across actions
         self._state = self.load_state()
 
-        # get the asset config
+        if not isinstance(self._state, dict):
+            self.debug_print("Resetting the state file with the default format")
+            self._state = {
+                "app_version": self.get_app_json().get('app_version')
+            }
+            return self.set_status(phantom.APP_ERROR, QINTELQSENTRY_STATE_FILE_CORRUPT_ERR)
+
         config = self.get_config()
+        self._proxies = {}
+        env_vars = config.get('_reserved_environment_variables', {})
+        if 'HTTP_PROXY' in env_vars:
+            self._proxies['http'] = env_vars['HTTP_PROXY']['value']
+        elif 'HTTP_PROXY' in os.environ:
+            self._proxies['http'] = os.environ.get('HTTP_PROXY')
+
+        if 'HTTPS_PROXY' in env_vars:
+            self._proxies['https'] = env_vars['HTTPS_PROXY']['value']
+        elif 'HTTPS_PROXY' in os.environ:
+            self._proxies['https'] = os.environ.get('HTTPS_PROXY')
+
+        self.plaintext_passwords = config.get('qwatch_fetch_password')
 
         self.client_args = {
             'remote': config.get('remote'),
             'token': config['token'],
             'user_agent': USER_AGENT,
-            'logger': self.debug_print
+            'logger': self.debug_print,
+            'proxies': self._proxies
         }
 
         return phantom.APP_SUCCESS
