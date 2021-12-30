@@ -61,7 +61,7 @@ class QSentryConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, f'Test Connectivity Failed {str(e)}')
 
         self.save_progress('Test Connectivity Successful')
-        return action_result.set_status(phantom.APP_SUCCESS, 'Test Connectivity Successful')
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _qsentry_query(self, ip, search_args=None):
 
@@ -95,11 +95,7 @@ class QSentryConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
         action_result = self.add_action_result(ActionResult(dict(param)))
-        ip = param.get('ip')
-
-        if not ip:
-            self.debug_print(f'missing ip parameter for {self.get_action_identifier()}')
-            return action_result.set_status(phantom.APP_ERROR, 'Missing ip address for lookup')
+        ip = param['ip']
 
         summary = {'criminal': False, 'anonymization': False}
 
