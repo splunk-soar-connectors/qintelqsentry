@@ -13,9 +13,9 @@
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
 
+import ipaddress
 import json
 import os
-import ipaddress
 from copy import deepcopy
 
 # Phantom App imports
@@ -23,8 +23,8 @@ import phantom.app as phantom
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
-from qintelqsentry_helper import search_qsentry
 from qintelqsentry_consts import *
+from qintelqsentry_helper import search_qsentry
 
 
 class QSentryConnector(BaseConnector):
