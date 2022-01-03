@@ -1,6 +1,6 @@
 [comment]: # " File: readme.md"
 [comment]: # ""
-[comment]: # "  Copyright (c) 2009-2022 Qintel, LLC"
+[comment]: # "  Copyright (c) 2022 Qintel, LLC"
 [comment]: # ""
 [comment]: # "  Licensed under the Apache License, Version 2.0 (the \"License\");"
 [comment]: # "  you may not use this file except in compliance with the License."
