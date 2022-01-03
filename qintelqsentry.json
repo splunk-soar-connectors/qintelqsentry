@@ -9,7 +9,7 @@
     "product_name": "Qintel QSentry",
     "product_version_regex": ".*",
     "publisher": "Qintel, LLC",
-    "license": "Apache 2.0",
+    "license": "Copyright (c) 2009-2022 Qintel, LLC",
     "app_version": "1.0.0",
     "utctime_updated": "2021-11-16T14:25:46.922845Z",
     "package_name": "phantom_qintelqsentry",
@@ -17,6 +17,7 @@
     "min_phantom_version": "5.0.0",
     "app_wizard_version": "1.0.0",
     "python_version": "3",
+    "fips_compliant": true,
     "configuration": {
         "token": {
             "description": "API Token",

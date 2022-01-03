@@ -1,6 +1,6 @@
 # File: qintelqsentry_helper.py
 #
-# Copyright (c) 2009-2021 Qintel, LLC
+# Copyright (c) 2009-2022 Qintel, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
