@@ -1,6 +1,6 @@
 # File: qintelqsentry_consts.py
 #
-# Copyright (c) 2022 Qintel, LLC
+# Copyright (c) 2022-2025 Qintel, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 # and limitations under the License.
 
 # Misc
-VERSION = '1.0.0'
-USER_AGENT = 'Splunk-SOAR-'
+VERSION = "1.0.0"
+USER_AGENT = "Splunk-SOAR-"
 USER_AGENT += VERSION
 
 QINTELQSENTRY_STATE_FILE_CORRUPT_ERR = "Error occurred while loading the state file due to its unexpected format.\
